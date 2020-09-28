@@ -6,17 +6,23 @@ import requests
 
 app = Flask(__name__)
 
-
+# Route that
 @app.route('/repos')
 def get_trending_data():
+
+    # API Call to get trending repos during the previous month
     repo_data = requests.get(TRENDING_REPOS).json()
-    language_of_each_repo = language_of_repo(repo_data)
+
+    # Language used by each repo
+    repo_languages = language_of_repo(repo_data)
+
+    # Stores the data required regarding each repo
     trending_repos_data = {}
 
-    for i in language_of_each_repo:
-        trending_repos_data[i] = {}
-        trending_repos_data[i]['repositories'] = language_of_each_repo[i]
-        trending_repos_data[i]['number_of_repos'] = len(language_of_each_repo[i])
+    for language in language_of_each_repo:
+        trending_repos_data[language] = {}
+        trending_repos_data[language]['repositories'] = repo_languages[language]
+        trending_repos_data[language]['number_of_repos'] = len(repo_languages[language])
 
     return jsonify(trending_repos_data)
 
